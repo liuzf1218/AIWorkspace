@@ -1,0 +1,35 @@
+# Dependencies
+node_modules/
+
+# Build outputs
+publish/
+publish-test/
+publish_*/
+
+# .NET
+bin/
+obj/
+*.user
+*.suo
+
+# Frontend build output (copied to WPF Assets)
+src/AIWorkspace.Web/dist/
+
+# Logs
+*.log
+
+# IDE
+.vs/
+.idea/
+*.swp
+
+# OS
+.DS_Store
+Thumbs.db
+
+# Database (local dev)
+*.db
+*.db-journal
+
+# Temp
+*.tmp

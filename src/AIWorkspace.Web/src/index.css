@@ -1,0 +1,102 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+:root,
+html.dark {
+  --background: #1e1e1e;
+  --surface: #252526;
+  --surfaceHover: #2a2d2e;
+  --border: #4b4b4f;
+  --text: #cccccc;
+  --textSecondary: #9ca3af;
+  --accent: #007acc;
+  --accentHover: #0098ff;
+  --userBubble: #2b2b2b;
+  --assistantBubble: #1e1e1e;
+  --codeBg: #2a2a2a;
+}
+
+html.light {
+  --background: #ffffff;
+  --surface: #f8f9fa;
+  --surfaceHover: #e9ecef;
+  --border: #ced4da;
+  --text: #111827;
+  --textSecondary: #374151;
+  --accent: #0d6efd;
+  --accentHover: #0b5ed7;
+  --userBubble: #e9ecef;
+  --assistantBubble: #f8f9fa;
+  --codeBg: #cbd5e1;
+}
+
+@layer base {
+  body {
+    @apply bg-background text-text antialiased;
+    font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif;
+  }
+
+  ::-webkit-scrollbar {
+    width: 8px;
+    height: 8px;
+  }
+
+  ::-webkit-scrollbar-track {
+    @apply bg-transparent;
+  }
+
+  ::-webkit-scrollbar-thumb {
+    @apply bg-border rounded-full;
+  }
+
+  ::-webkit-scrollbar-thumb:hover {
+    @apply bg-textSecondary;
+  }
+
+  pre {
+    @apply bg-codeBg rounded-lg p-4 overflow-x-auto text-sm;
+  }
+
+  code {
+    @apply font-mono text-sm;
+  }
+
+  p {
+    @apply leading-relaxed;
+  }
+
+  ul, ol {
+    @apply pl-5 my-2;
+  }
+
+  li {
+    @apply my-1;
+  }
+
+  a {
+    @apply text-accent hover:underline;
+  }
+
+  blockquote {
+    @apply border-l-4 border-accent pl-4 italic my-4;
+  }
+}
+
+@layer components {
+  .btn-primary {
+    @apply bg-accent hover:bg-accentHover text-white px-4 py-2 rounded-lg transition-colors text-sm font-medium;
+  }
+
+  .btn-secondary {
+    @apply bg-surface hover:bg-surfaceHover text-text px-4 py-2 rounded-lg transition-colors text-sm font-medium border border-border;
+  }
+
+  .input-field {
+    @apply bg-surface border border-border rounded-lg px-3 py-2 text-sm text-text placeholder-textSecondary focus:outline-none focus:border-accent transition-colors;
+  }
+
+  .card {
+    @apply bg-surface border border-border rounded-lg p-4;
+  }
+}
