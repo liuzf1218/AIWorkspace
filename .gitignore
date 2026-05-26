@@ -39,3 +39,6 @@ Thumbs.db
 
 # Windows temp files
 新建*.txt
+
+# Local-only documentation
+docs/GITHUB_PUBLISH_GUIDE.md
