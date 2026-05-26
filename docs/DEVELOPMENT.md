@@ -24,7 +24,12 @@
 
 ## 一、项目概述
 
-AI Workspace 是一款面向技术人员的 Windows 桌面 AI 分析工作台，采用 **WPF + WebView2 + React** 混合架构。核心定位是统一接入多模型，围绕技术日志、截图、文件构建完整分析工作流。
+AI Workspace 是一款面向技术人员的 AI 分析工作台，采用多端混合架构。
+
+- **桌面端（Windows）**：WPF + WebView2 + React
+- **移动端（Android）**：Kotlin + Jetpack Compose
+
+核心定位是统一接入多模型，围绕技术日志、截图、文件构建完整分析工作流。
 
 ### 关键设计决策
 
@@ -46,14 +51,18 @@ AI Workspace 是一款面向技术人员的 Windows 桌面 AI 分析工作台，
 
 | 组件 | 版本 | 说明 |
 |------|------|------|
-| Windows | 10 1903+ / 11 | WebView2 最低要求 |
-| .NET SDK | 8.0+ | 编译后端 |
-| Node.js | 18+ | 编译前端 |
-| WebView2 Runtime | Evergreen | 运行时依赖（未安装会弹窗引导） |
+| Windows | 10 1903+ / 11 | 桌面端 WebView2 最低要求 |
+| .NET SDK | 8.0+ | 编译桌面端后端 |
+| Node.js | 18+ | 编译桌面端前端 |
+| WebView2 Runtime | Evergreen | 桌面端运行时依赖 |
+| Android Studio | Hedgehog+ | Android 开发 IDE |
+| JDK | 17 | Android 编译 |
+| Android SDK | 34 | Android 目标版本 |
 
 ### 构建步骤
 
 ```powershell
+# 桌面端构建
 # 方式一：使用 PowerShell 脚本（推荐）
 .\scripts\build.ps1
 
@@ -72,6 +81,15 @@ dotnet publish src/AIWorkspace.WPF/AIWorkspace.WPF.csproj `
   -p:PublishSingleFile=true `
   -p:IncludeNativeLibrariesForSelfExtract=true `
   -o .\publish
+```
+
+```bash
+# Android 端构建
+cd src/AIWorkspace.Android
+./gradlew assembleDebug
+
+# 安装到设备
+./gradlew installDebug
 ```
 
 ### 开发调试
@@ -96,6 +114,14 @@ npm run dev    # http://localhost:5173
 
 | 想修改的功能 | 前端文件 | 后端文件 |
 |-------------|----------|----------|
+| **Android 端** | | |
+| Android 聊天界面 | `src/AIWorkspace.Android/app/src/main/java/com/aiworkspace/ui/screens/ChatScreen.kt` | — |
+| Android 相机/相册 | `src/AIWorkspace.Android/app/src/main/java/com/aiworkspace/ui/components/ChatInput.kt` | — |
+| Android Provider 管理 | `src/AIWorkspace.Android/app/src/main/java/com/aiworkspace/ui/screens/ProviderManagementScreen.kt` | — |
+| Android 主题/设置 | `src/AIWorkspace.Android/app/src/main/java/com/aiworkspace/ui/screens/SettingsScreen.kt` | — |
+| Android ViewModel | `src/AIWorkspace.Android/app/src/main/java/com/aiworkspace/viewmodel/ChatViewModel.kt` | — |
+| Android 数据库 | `src/AIWorkspace.Android/app/src/main/java/com/aiworkspace/data/db/` | — |
+| **桌面端** | | |
 | 聊天消息布局/气泡/滚动 | `src/AIWorkspace.Web/src/components/Chat/MessageList.tsx` | — |
 | 输入框/截图/文件/发送 | `src/AIWorkspace.Web/src/components/Chat/ChatInput.tsx` | — |
 | 顶部 Provider/模型下拉菜单 | `src/AIWorkspace.Web/src/components/Chat/ChatArea.tsx` | — |

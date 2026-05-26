@@ -1,7 +1,7 @@
 # AI Workspace 后续演进计划
 
-> 当前状态：Phase 1-3 已完成（基础架构 + 核心聊天 + 技术输入系统）  
-> 文档版本：V1.0
+> 当前状态：桌面端 Phase 1-3 已完成；Android 端 Phase 1-4 已完成  
+> 文档版本：V1.1
 
 ---
 
@@ -319,17 +319,18 @@ public interface IPlugin
 
 ### 6. 跨平台移植
 
-**方案 A：Avalonia + WebView**
-- Avalonia 替代 WPF（支持 Windows/macOS/Linux）
-- 继续使用 WebView 加载 React
+**Android 端（已完成）**
+- Kotlin + Jetpack Compose 原生 Android 应用
+- 独立代码库，直接复用桌面端 SQLite schema
+- 详见 `src/AIWorkspace.Android/README.md`
 
-**方案 B：Tauri**
-- Rust 后端 + React 前端
-- 天然跨平台，体积更小
+**桌面端其他方案**
 
-**方案 C：MAUI**
-- 微软官方跨平台方案
-- Blazor Hybrid 替代 React（需重写前端）
+| 方案 | 优点 | 缺点 | 状态 |
+|------|------|------|------|
+| **Avalonia + WebView** | 跨平台（Win/macOS/Linux） | 需重写 WPF 层 | 评估中 |
+| **Tauri** | Rust 后端 + React，体积小 | 需重写后端 | 评估中 |
+| **MAUI** | 微软官方跨平台 | 需重写前端为 Blazor | 评估中 |
 
 ---
 
@@ -341,12 +342,14 @@ public interface IPlugin
 |------|------|----------|----------|
 | `useChatStore` 循环引用 | 编译警告 | 将 `useProviderStore` 提取为参数传入 | V1.0 |
 | 前端文件上传未实现真正对话框 | 仅模拟 | WPF 端实现 `file:read` 的真正文件选择 | V1.0 |
-| 无单元测试 | 回归风险 | 补充 xUnit + Vitest | V1.1 |
+| 无单元测试 | 回归风险 | 补充 xUnit + Vitest + Android JUnit | V1.1 |
 | 硬编码模型列表 | 维护困难 | 从配置文件/远程加载 | V1.1 |
 | 未处理 WebView2 未安装场景 | 首次启动崩溃 | 启动前检测并引导安装 | V1.0 |
-| 消息无虚拟滚动 | 长会话卡顿 | 集成 `react-window` | V1.2 |
+| 消息无虚拟滚动 | 长会话卡顿 | 集成 `react-window` / Android LazyColumn 已原生支持 | V1.2 |
 | 无自动更新机制 | 分发困难 | 集成 Squirrel 或自定义更新 | V1.2 |
-| 新消息无法置顶滚动 | 用户体验：多轮对话后新消息停留在底部，需手动滚动查看 | 调研 WebView2 与 React scroll 冲突根因；尝试 WPF 端直接控制滚动或改用 CSS scroll-snap | V1.0 |
+| 新消息无法置顶滚动 | 桌面端用户体验问题 | 调研 WebView2 与 React scroll 冲突根因 | V1.0 |
+| Android Markdown 代码块复制 | 功能缺失 | 自定义 compose-richtext 代码块渲染 | V1.1 |
+| Android 通用文件上传 | 仅支持图片 | 集成 Storage Access Framework | V1.1 |
 
 ---
 
