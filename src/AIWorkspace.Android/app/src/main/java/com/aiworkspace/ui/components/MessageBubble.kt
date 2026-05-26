@@ -4,6 +4,7 @@ import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.sizeIn
 import androidx.compose.foundation.layout.widthIn
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.MaterialTheme
@@ -12,8 +13,11 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
+import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.unit.dp
+import coil.compose.AsyncImage
 import com.aiworkspace.data.entity.MessageEntity
+import com.aiworkspace.ui.components.markdown.MarkdownRenderer
 
 @Composable
 fun MessageBubble(
@@ -48,11 +52,31 @@ fun MessageBubble(
                 )
                 .padding(12.dp)
         ) {
-            Text(
-                text = message.content,
-                style = MaterialTheme.typography.bodyMedium,
-                color = MaterialTheme.colorScheme.onSurface
-            )
+            // Image attachment
+            if (message.imageData != null) {
+                AsyncImage(
+                    model = message.imageData,
+                    contentDescription = "Attached image",
+                    contentScale = ContentScale.Fit,
+                    modifier = Modifier
+                        .sizeIn(maxWidth = 280.dp, maxHeight = 200.dp)
+                        .clip(RoundedCornerShape(8.dp))
+                        .padding(bottom = 8.dp)
+                )
+            }
+
+            // Text content
+            if (message.content.isNotBlank()) {
+                if (isUser) {
+                    Text(
+                        text = message.content,
+                        style = MaterialTheme.typography.bodyMedium,
+                        color = MaterialTheme.colorScheme.onSurface
+                    )
+                } else {
+                    MarkdownRenderer(content = message.content)
+                }
+            }
         }
     }
 }

@@ -10,8 +10,10 @@ import com.aiworkspace.data.repository.ChatRepository
 import com.aiworkspace.data.repository.ProviderRepository
 import com.aiworkspace.data.repository.SettingsRepository
 import com.aiworkspace.network.SseEventSource
+import com.aiworkspace.network.model.ChatImageDto
 import com.aiworkspace.network.model.ChatMessageDto
 import com.aiworkspace.network.model.ChatRequest
+import com.aiworkspace.network.model.ImageUrlDto
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
@@ -153,8 +155,11 @@ class ChatViewModel(
 
             // Prepare context messages
             val history = chatRepository.getRecentMessages(convId, 20)
-            val apiMessages = history.map {
-                ChatMessageDto(role = it.role, content = it.content)
+            val apiMessages = history.map { msg ->
+                val images = msg.imageData?.let { base64 ->
+                    listOf(ChatImageDto(imageUrl = ImageUrlDto(url = base64)))
+                }
+                ChatMessageDto(role = msg.role, content = msg.content, images = images)
             }
 
             _isStreaming.value = true

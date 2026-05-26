@@ -62,14 +62,25 @@ fun Sidebar(
             modifier = Modifier.padding(vertical = 4.dp)
         )
 
-        LazyColumn {
-            items(conversations) { conversation ->
-                ConversationItem(
-                    conversation = conversation,
-                    isSelected = conversation.id == currentConversationId,
-                    onClick = { onConversationClick(conversation.id) },
-                    onDelete = { onDeleteConversation(conversation.id) }
-                )
+        if (conversations.isEmpty()) {
+            Text(
+                text = "No conversations yet",
+                style = MaterialTheme.typography.bodyMedium,
+                color = MaterialTheme.colorScheme.onSurfaceVariant,
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .padding(horizontal = 8.dp, vertical = 16.dp)
+            )
+        } else {
+            LazyColumn {
+                items(conversations, key = { it.id }) { conversation ->
+                    ConversationItem(
+                        conversation = conversation,
+                        isSelected = conversation.id == currentConversationId,
+                        onClick = { onConversationClick(conversation.id) },
+                        onDelete = { onDeleteConversation(conversation.id) }
+                    )
+                }
             }
         }
     }

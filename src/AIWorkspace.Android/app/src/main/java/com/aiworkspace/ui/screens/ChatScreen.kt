@@ -17,6 +17,7 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import com.aiworkspace.data.entity.MessageEntity
 import com.aiworkspace.ui.components.ChatInput
@@ -34,45 +35,54 @@ fun ChatScreen(
 ) {
     val listState = rememberLazyListState()
 
-    LaunchedEffect(messages.size, isStreaming) {
-        if (messages.isNotEmpty()) {
-            listState.animateScrollToItem(messages.size - 1)
+    // Auto-scroll when messages change or streaming content updates
+    LaunchedEffect(messages.size, streamContent, isStreaming) {
+        val targetIndex = when {
+            messages.isEmpty() && isStreaming -> 0
+            messages.isNotEmpty() -> messages.size - 1
+            else -> return@LaunchedEffect
         }
+        listState.animateScrollToItem(targetIndex)
     }
 
     Column(modifier = modifier.fillMaxSize()) {
         // Messages list
-        LazyColumn(
-            state = listState,
-            modifier = Modifier.weight(1f)
-        ) {
-            items(messages) { message ->
-                MessageBubble(message = message)
-            }
-
-            // Streaming indicator
-            if (isStreaming && streamContent.isNotEmpty()) {
-                item {
-                    MessageBubble(
-                        message = MessageEntity(
-                            id = "streaming",
-                            conversationId = "",
-                            role = "assistant",
-                            content = streamContent
-                        )
+        Box(modifier = Modifier.weight(1f)) {
+            if (messages.isEmpty() && !isStreaming) {
+                // Empty state
+                Box(
+                    modifier = Modifier.fillMaxSize(),
+                    contentAlignment = Alignment.Center
+                ) {
+                    Text(
+                        text = "Start a new conversation",
+                        style = MaterialTheme.typography.bodyLarge,
+                        color = MaterialTheme.colorScheme.onSurfaceVariant,
+                        textAlign = TextAlign.Center,
+                        modifier = Modifier.padding(32.dp)
                     )
                 }
-            }
+            } else {
+                LazyColumn(
+                    state = listState,
+                    modifier = Modifier.fillMaxSize()
+                ) {
+                    items(messages, key = { it.id }) { message ->
+                        MessageBubble(message = message)
+                    }
 
-            if (isStreaming && streamContent.isEmpty()) {
-                item {
-                    Box(
-                        modifier = Modifier
-                            .fillMaxWidth()
-                            .padding(16.dp),
-                        contentAlignment = Alignment.Center
-                    ) {
-                        CircularProgressIndicator()
+                    // Streaming message
+                    if (isStreaming) {
+                        item(key = "streaming") {
+                            MessageBubble(
+                                message = MessageEntity(
+                                    id = "streaming",
+                                    conversationId = "",
+                                    role = "assistant",
+                                    content = streamContent.ifBlank { "Thinking..." }
+                                )
+                            )
+                        }
                     }
                 }
             }
