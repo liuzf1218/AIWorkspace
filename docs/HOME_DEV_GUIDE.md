@@ -55,10 +55,10 @@ cd ~/Projects
 ### 2.2 克隆仓库
 
 ```bash
-git clone root@172.19.12.4:git-repos/AIWorkspace.git
+git clone YOUR_SSH_USER@YOUR_SERVER_IP:git-repos/AIWorkspace.git
 ```
 
-**输入密码**：`act4`
+**输入密码**：`YOUR_PASSWORD`
 
 ### 2.3 进入项目
 
@@ -129,10 +129,10 @@ git add .
 # 3. 提交（写清楚改了什么）
 git commit -m "fix: 修复消息置顶滚动问题"
 
-# 4. 推送到服务器（会提示输入密码 act4）
+# 4. 推送到服务器（会提示输入密码 YOUR_PASSWORD）
 git push
 
-# 输入密码: act4
+# 输入密码: YOUR_PASSWORD
 ```
 
 ### 4.4 从服务器拉取最新代码
@@ -142,7 +142,7 @@ git push
 ```bash
 git pull
 
-# 输入密码: act4
+# 输入密码: YOUR_PASSWORD
 ```
 
 ---
@@ -186,8 +186,8 @@ cat ~/.ssh/id_ed25519.pub
 SSH 登录服务器，粘贴公钥：
 
 ```bash
-ssh root@172.19.12.4
-# 输入密码: act4
+ssh YOUR_SSH_USER@YOUR_SERVER_IP
+# 输入密码: YOUR_PASSWORD
 
 echo '粘贴你复制的公钥内容' >> ~/.ssh/authorized_keys
 exit
@@ -196,7 +196,7 @@ exit
 ### 6.3 验证免密
 
 ```bash
-ssh root@172.19.12.4
+ssh YOUR_SSH_USER@YOUR_SERVER_IP
 # 不输密码直接登录 = 成功
 ```
 
@@ -220,8 +220,8 @@ git push
 ### Q2: 提示 "Permission denied"
 
 检查：
-1. 服务器 IP 是否正确（`172.19.12.4`）
-2. 密码是否输入正确（`act4`）
+1. 服务器 IP 是否正确（`YOUR_SERVER_IP`）
+2. 密码是否输入正确（`YOUR_PASSWORD`）
 3. 如果配置了免密，检查 `~/.ssh/id_ed25519` 是否存在
 
 ### Q3: 前端 `npm run dev` 正常，WPF 里白屏
@@ -239,7 +239,7 @@ https://developer.microsoft.com/en-us/microsoft-edge/webview2/
 
 | 操作 | 命令 | 说明 |
 |------|------|------|
-| 克隆 | `git clone root@172.19.12.4:git-repos/AIWorkspace.git` | 首次 |
+| 克隆 | `git clone YOUR_SSH_USER@YOUR_SERVER_IP:git-repos/AIWorkspace.git` | 首次 |
 | 查看改动 | `git status` | 随时 |
 | 提交 | `git add . && git commit -m "说明"` | 本地存档 |
 | 推送 | `git push` | 上传到服务器 |

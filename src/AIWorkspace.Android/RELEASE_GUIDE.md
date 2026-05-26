@@ -67,8 +67,8 @@ sdkmanager --list    # 查看已安装组件
 cd /opt
 mkdir -p build && cd build
 
-# 克隆（密码 act4）
-git clone root@172.19.12.4:git-repos/AIWorkspace.git
+# 克隆（密码 YOUR_PASSWORD）
+git clone YOUR_SSH_USER@YOUR_SERVER_IP:git-repos/AIWorkspace.git
 
 cd AIWorkspace/src/AIWorkspace.Android
 ```
@@ -98,8 +98,8 @@ keytool -genkey -v \
   -keyalg RSA \
   -keysize 2048 \
   -validity 10000 \
-  -storepass AIWorkspace2024 \
-  -keypass AIWorkspace2024 \
+  -storepass YOUR_KEYSTORE_PASSWORD \
+  -keypass YOUR_KEYSTORE_PASSWORD \
   -dname "CN=AIWorkspace, OU=Dev, O=AIWorkspace, L=City, ST=State, C=CN"
 
 # 移动密钥库到安全位置（可选）
@@ -122,9 +122,9 @@ android {
     signingConfigs {
         create("release") {
             storeFile = file(System.getenv("HOME") + "/.android/keys/aiworkspace-release.keystore")
-            storePassword = "AIWorkspace2024"
+            storePassword = "YOUR_KEYSTORE_PASSWORD"
             keyAlias = "aiworkspace"
-            keyPassword = "AIWorkspace2024"
+            keyPassword = "YOUR_KEYSTORE_PASSWORD"
         }
     }
 
@@ -224,7 +224,7 @@ cp app/build/outputs/apk/release/app-release.apk \
    /var/www/html/aiworkspace-v1.0.0.apk
 
 # 或 SCP 下载到本地
-scp root@172.19.12.4:/opt/build/AIWorkspace/src/AIWorkspace.Android/app/build/outputs/apk/release/app-release.apk ./
+scp YOUR_SSH_USER@YOUR_SERVER_IP:/opt/build/AIWorkspace/src/AIWorkspace.Android/app/build/outputs/apk/release/app-release.apk ./
 ```
 
 ### 5.2 安装到设备（测试）
