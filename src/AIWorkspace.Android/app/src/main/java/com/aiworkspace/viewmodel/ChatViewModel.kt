@@ -49,6 +49,15 @@ class ChatViewModel(
     private val _error = MutableStateFlow<String?>(null)
     val error: StateFlow<String?> = _error.asStateFlow()
 
+    private val _searchQuery = MutableStateFlow("")
+    val searchQuery: StateFlow<String> = _searchQuery.asStateFlow()
+
+    private val _searchResults = MutableStateFlow<List<MessageEntity>>(emptyList())
+    val searchResults: StateFlow<List<MessageEntity>> = _searchResults.asStateFlow()
+
+    private val _isSearching = MutableStateFlow(false)
+    val isSearching: StateFlow<Boolean> = _isSearching.asStateFlow()
+
     private val _selectedProvider = MutableStateFlow<ProviderEntity?>(null)
     val selectedProvider: StateFlow<ProviderEntity?> = _selectedProvider.asStateFlow()
 
@@ -153,6 +162,15 @@ class ChatViewModel(
             chatRepository.addMessage(userMsg)
             chatRepository.updateConversationTimestamp(convId)
 
+            // Auto-generate title from first user message
+            val conversation = chatRepository.getConversationById(convId)
+            if (conversation?.title == null || conversation.title == "New Chat") {
+                val newTitle = content.take(30).let {
+                    if (content.length > 30) "$it..." else it
+                }.ifBlank { "New Chat" }
+                chatRepository.updateConversationTitle(convId, newTitle)
+            }
+
             // Prepare context messages
             val history = chatRepository.getRecentMessages(convId, 20)
             val apiMessages = history.map { msg ->
@@ -212,6 +230,42 @@ class ChatViewModel(
 
     fun clearError() {
         _error.value = null
+    }
+
+    fun searchMessages(query: String) {
+        _searchQuery.value = query
+        if (query.isBlank()) {
+            _searchResults.value = emptyList()
+            _isSearching.value = false
+            return
+        }
+        val convId = _currentConversationId.value ?: return
+        viewModelScope.launch {
+            _isSearching.value = true
+            _searchResults.value = chatRepository.searchMessages(convId, query)
+            _isSearching.value = false
+        }
+    }
+
+    fun clearSearch() {
+        _searchQuery.value = ""
+        _searchResults.value = emptyList()
+        _isSearching.value = false
+    }
+
+    fun retryLastMessage() {
+        val convId = _currentConversationId.value ?: return
+        viewModelScope.launch {
+            val history = chatRepository.getRecentMessages(convId, 20)
+            val lastUserMsg = history.lastOrNull { it.role == "user" } ?: return@launch
+            doSendMessage(
+                convId = convId,
+                content = lastUserMsg.content,
+                imageBase64 = lastUserMsg.imageData,
+                provider = _selectedProvider.value ?: return@launch,
+                modelId = _selectedModel.value ?: return@launch
+            )
+        }
     }
 
     class Factory(

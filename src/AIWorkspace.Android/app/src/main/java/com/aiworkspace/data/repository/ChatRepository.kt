@@ -49,4 +49,7 @@ class ChatRepository(
 
     suspend fun getRecentMessages(conversationId: String, limit: Int = 20): List<MessageEntity> =
         messageDao.getRecentMessages(conversationId, limit)
+
+    suspend fun searchMessages(conversationId: String, query: String): List<MessageEntity> =
+        messageDao.searchMessages(conversationId, query)
 }

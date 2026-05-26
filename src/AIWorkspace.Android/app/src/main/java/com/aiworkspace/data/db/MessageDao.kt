@@ -23,4 +23,7 @@ interface MessageDao {
 
     @Query("SELECT * FROM messages WHERE conversation_id = :conversationId ORDER BY created_at DESC LIMIT :limit")
     suspend fun getRecentMessages(conversationId: String, limit: Int): List<MessageEntity>
+
+    @Query("SELECT * FROM messages WHERE conversation_id = :conversationId AND content LIKE '%' || :query || '%' ORDER BY created_at ASC")
+    suspend fun searchMessages(conversationId: String, query: String): List<MessageEntity>
 }
