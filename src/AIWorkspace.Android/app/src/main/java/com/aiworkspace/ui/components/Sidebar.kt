@@ -3,14 +3,20 @@ package com.aiworkspace.ui.components
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxHeight
 import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Add
 import androidx.compose.material.icons.filled.Delete
+import androidx.compose.material.icons.filled.Settings
+import androidx.compose.material.icons.filled.Storage
+import androidx.compose.material3.HorizontalDivider
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
 import androidx.compose.material3.MaterialTheme
@@ -32,6 +38,8 @@ fun Sidebar(
     onConversationClick: (String) -> Unit,
     onNewChat: () -> Unit,
     onDeleteConversation: (String) -> Unit,
+    onNavigateToProviders: () -> Unit,
+    onNavigateToSettings: () -> Unit,
     modifier: Modifier = Modifier
 ) {
     Column(
@@ -83,6 +91,45 @@ fun Sidebar(
                 }
             }
         }
+
+        Spacer(modifier = Modifier.weight(1f))
+
+        HorizontalDivider(modifier = Modifier.padding(vertical = 8.dp))
+
+        // Navigation items
+        SidebarNavItem(
+            icon = { Icon(Icons.Default.Storage, contentDescription = null) },
+            label = "Providers",
+            onClick = onNavigateToProviders
+        )
+        Spacer(modifier = Modifier.height(4.dp))
+        SidebarNavItem(
+            icon = { Icon(Icons.Default.Settings, contentDescription = null) },
+            label = "Settings",
+            onClick = onNavigateToSettings
+        )
+    }
+}
+
+@Composable
+private fun SidebarNavItem(
+    icon: @Composable () -> Unit,
+    label: String,
+    onClick: () -> Unit
+) {
+    Row(
+        verticalAlignment = Alignment.CenterVertically,
+        modifier = Modifier
+            .fillMaxWidth()
+            .clickable(onClick = onClick)
+            .padding(horizontal = 8.dp, vertical = 10.dp)
+    ) {
+        icon()
+        Spacer(modifier = Modifier.width(12.dp))
+        Text(
+            text = label,
+            style = MaterialTheme.typography.bodyMedium
+        )
     }
 }
 
