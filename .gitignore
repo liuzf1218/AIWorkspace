@@ -33,3 +33,9 @@ Thumbs.db
 
 # Temp
 *.tmp
+
+# AI workspace internal
+.kimi/
+
+# Windows temp files
+新建*.txt
